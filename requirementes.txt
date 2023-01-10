@@ -1,3 +1,4 @@
 djangorestframework
 djangorestframework-simplejwt
 itsdangerous
+django-filters

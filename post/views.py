@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from post.models import Category, Comment, Post, Follow
 from post.serializers import CategorySerializer, CommentSerializer, PostModelSerializer, FollowSerializer
+from post.post_search import PostFilter
 
 
 class CategoryListView(generics.ListCreateAPIView):
@@ -33,6 +34,7 @@ class PostApiView(APIView):
 
     def get(self, req):
         data = Post.objects.all()
+        filtered = PostFilter(req.GET, data)
         serializer = PostModelSerializer(data, many=True)
 
         return Response(serializer.data)
