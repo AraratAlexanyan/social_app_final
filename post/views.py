@@ -2,8 +2,8 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from post.models import Category, Comment, Post, Follow
-from post.serializers import CategorySerializer, CommentSerializer, PostModelSerializer, FollowSerializer
+from post.models import Category, Comment, Post
+from post.serializers import CategorySerializer, CommentSerializer, PostModelSerializer
 from post.post_search import PostFilter
 
 
@@ -56,27 +56,6 @@ class PostDetailView(APIView):
         comment_serializer = CommentSerializer(comments, many=True)
 
         return Response({'post': post_serializer.data, 'comments': comment_serializer.data})
-
-
-class FollowApiView(APIView):
-    def get(self, req):
-
-        data = Follow.objects.filter(follower=req.user)
-        serializer = FollowSerializer(data, many=True)
-        return Response(serializer.data)
-
-    def post(self, req):
-
-        follows = Follow.objects.filter(follower=req.user).filter(favorite=req.data['favorite'])
-
-        if not follows:
-            serializer = FollowSerializer(data=req.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save(follower=req.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            follows.delete()
-            return Response(status=status.HTTP_200_OK)
 
 
 class PostLikesAPIView(APIView):

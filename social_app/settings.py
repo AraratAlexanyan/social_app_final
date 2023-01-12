@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #
     'rest_framework',
-    'django-filters',
+    'django_filters',
+    #
     'user.apps.UserConfig',
     'post.apps.PostConfig',
 ]
@@ -177,5 +179,5 @@ EMAIL_HOST_USER = "alexanyan.ararat1@gmail.com"
 EMAIL_HOST_PASSWORD = "rjvlhdgifijhdwbu"
 
 BASE_URL = "http://127.0.0.1:8000"
-VERIFICATION_TIME_IN_SECONDS = 30
+VERIFICATION_TIME_IN_SECONDS = 300
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from post.models import Category, Comment, Post, Follow
+from post.models import Category, Comment, Post
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -27,9 +27,4 @@ class PostModelSerializer(serializers.ModelSerializer):
                   "category", 'likes_count', 'likes', 'favorites', 'saved_count')
 
 
-class FollowSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Follow
-        fields = ('favorite',)
 

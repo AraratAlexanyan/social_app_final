@@ -18,19 +18,18 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    post_name = models.CharField(max_length=50, unique=True)
     description = models.TextField(null=True, blank=True, default='Post waiting for description')
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='categories')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
     likes = models.ManyToManyField(User, blank=True, related_name='likes')
     likes_count = models.IntegerField(default=0)
-    favorites = models.ManyToManyField(User, related_name='favorites', blank=True, default=None)
+    saves = models.ManyToManyField(User, related_name='favorites', blank=True, default=None)
     saved_count = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.post_name
+        return self.author
 
     def save(
         self, *args, **kwargs
@@ -50,9 +49,3 @@ class Comment(models.Model):
         return self.comment[:10]+'...'
 
 
-class Follow(models.Model):
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    favorite = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite_user')
-
-    def __str__(self):
-        return str(self.follower)

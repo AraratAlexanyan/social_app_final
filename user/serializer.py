@@ -2,6 +2,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from user.models import Follow
+
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -15,3 +17,10 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
 
         return make_password(value)
+
+
+class FollowSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Follow
+        fields = ('favorite',)
