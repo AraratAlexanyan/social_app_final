@@ -34,7 +34,7 @@ class PostApiView(APIView):
 
     def get(self, req):
         data = Post.objects.all()
-        filtered = PostFilter(req.GET, data)
+        # filtered = PostFilter(req.GET, data)
         serializer = PostModelSerializer(data, many=True)
 
         return Response(serializer.data)

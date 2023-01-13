@@ -18,11 +18,12 @@ class Category(models.Model):
 
 
 class Post(models.Model):
+    post_name = models.CharField(max_length=50, blank=True)
     description = models.TextField(null=True, blank=True, default='Post waiting for description')
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='categories')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_author')
     likes = models.ManyToManyField(User, blank=True, related_name='likes')
     likes_count = models.IntegerField(default=0)
     saves = models.ManyToManyField(User, related_name='favorites', blank=True, default=None)
@@ -35,7 +36,7 @@ class Post(models.Model):
         self, *args, **kwargs
     ):
         self.likes_count = self.likes.count()
-        self.saved_count = self.favorites.count()
+        self.saved_count = self.saves.count()
         super(Post, self).save(*args, **kwargs)
 
 

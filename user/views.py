@@ -6,8 +6,13 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from user.models import Follow
 from user.serializer import UserSerializer, FollowSerializer
+
+
+# from user.models import Follow
+# from user.serializer import UserSerializer, FollowSerializer
 
 
 class UserLists(APIView):
@@ -26,12 +31,11 @@ class UserDetailView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, req, pk):
-        model = User.objects.get(pk=pk)
-        serializer = UserSerializer(model)
-        follower = Follow.objects.filter(follower=req.user)
-        x = follower.count()
-        print(x)
-        return Response({'user': serializer.data, 'followers count': x})
+        user = User.objects.get(id=pk)
+        followers_count = user.favorite.count()
+        serializer = UserSerializer(user)
+        data = {'user_detail': serializer.data, 'followers_count': followers_count}
+        return Response(data)
 
 
 class UserCreate(APIView):
@@ -77,19 +81,20 @@ class UserVerify(APIView):
 class FollowApiView(APIView):
     def get(self, req):
 
-        data = Follow.objects.filter(follower=req.user)
+        data = Follow.objects.filter(follower_user=req.user)
         serializer = FollowSerializer(data, many=True)
         return Response(serializer.data)
 
-    def post(self, req):
+    def post(self, req, pk):
 
-        follows = Follow.objects.filter(follower=req.user).filter(favorite=req.data['favorite'])
+        follows = Follow.objects.filter(follower_user=req.user.id).filter(favorite_user=pk)
 
         if not follows:
-            serializer = FollowSerializer(data=req.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save(follower=req.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            follow = Follow.objects.create(follower_user=req.user, favorite_user_id=pk)
+            user = User.objects.get(id=pk)
+            follow.followers_count = user.favorite.count()
+            follow.save()
+            return Response(follow)
         else:
             follows.delete()
             return Response(status=status.HTTP_200_OK)

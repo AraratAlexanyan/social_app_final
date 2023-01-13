@@ -8,5 +8,5 @@ urlpatterns = [
     path('reg/', UserCreate.as_view()),
     path('verify_token/', UserVerify.as_view()),
     path('follow/', FollowApiView.as_view()),
-
+    path('follow/<int:pk>/', FollowApiView.as_view()),
 ]
