@@ -18,9 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-    def validate_password(self, value):
-
-        return make_password(value)
+class UserPostDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username']
 
 
 # class UserFollowsSerializer(serializers.ModelSerializer):

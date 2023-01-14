@@ -18,26 +18,27 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    post_name = models.CharField(max_length=50, blank=True)
     description = models.TextField(null=True, blank=True, default='Post waiting for description')
     status = models.IntegerField(choices=STATUS_CHOICES, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='categories')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_author')
-    likes = models.ManyToManyField(User, blank=True, related_name='likes')
+    likes = models.ManyToManyField(User, blank=True, related_name='likes', default=None)
     likes_count = models.IntegerField(default=0)
     saves = models.ManyToManyField(User, related_name='favorites', blank=True, default=None)
     saved_count = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.author
+        return self.description[:10]+'...'
 
     def save(
-        self, *args, **kwargs
+            self, *args, **kwargs
     ):
-        self.likes_count = self.likes.count()
-        self.saved_count = self.saves.count()
-        super(Post, self).save(*args, **kwargs)
+        try:
+            self.likes_count = self.likes.count()
+            self.saved_count = self.saves.count()
+        except Exception:
+            super(Post, self).save(*args, **kwargs)
 
 
 class Comment(models.Model):
@@ -47,6 +48,4 @@ class Comment(models.Model):
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.comment[:10]+'...'
-
-
+        return self.comment[:10] + '...'
