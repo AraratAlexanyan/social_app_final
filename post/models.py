@@ -29,14 +29,15 @@ class Post(models.Model):
     saved_count = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.description[:10]+'...'
+        return self.description[:10] + '...'
+
 
     def save(
             self, *args, **kwargs
     ):
         try:
-            self.likes_count = self.likes.count()
-            self.saved_count = self.saves.count()
+            self.likes_count = self.likes.all().count()
+            self.saved_count = self.saves.all().count()
         except Exception:
             super(Post, self).save(*args, **kwargs)
 

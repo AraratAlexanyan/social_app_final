@@ -73,12 +73,15 @@ class PostLikesAPIView(APIView):
 
     def post(self, req, pk):
 
+        print('print')
+
         post = Post.objects.get(pk=pk)
         is_liked = False
 
         for like in post.likes.all():
             if like == req.user:
                 is_liked = True
+                break
 
         if not is_liked:
             post.likes.add(req.user)

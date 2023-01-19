@@ -9,7 +9,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('author', 'status',  'description', 'likes_count', 'saved_count')
+    list_display = ('author', 'status',  'description', 'likes_count', 'saved_count', 'id')
     search_fields = ('author', 'status', 'description', )
     list_display_links = ('author', )
 
