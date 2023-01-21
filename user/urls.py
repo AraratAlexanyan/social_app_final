@@ -1,6 +1,6 @@
 from django.urls import path
 
-from user.views import UserCreate, UserLists, UserVerify, UserDetailView, FollowApiView
+from user.views import UserCreate, UserLists, UserVerify, UserDetailView, FollowApiView, UserUpdateView
 
 urlpatterns = [
     path('', UserLists.as_view()),
@@ -9,4 +9,6 @@ urlpatterns = [
     path('verify_token/', UserVerify.as_view()),
     path('follow/', FollowApiView.as_view()),
     path('follow/<int:pk>/', FollowApiView.as_view()),
+    path('profile/<int:pk>/', UserUpdateView.as_view({'put': 'update'})),
+
 ]

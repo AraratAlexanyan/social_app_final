@@ -15,7 +15,23 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = User
-        fields = '__all__'
+        exclude = ('password', 'groups', 'user_permissions')
+
+
+class UserSerializerRepr(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = User
+        fields = ('id', 'username',)
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        exclude = ('password', 'last_login', 'is_active',
+                   'is_staff', 'is_superuser', 'groups', 'user_permissions')
 
 
 class UserPostDetailSerializer(serializers.ModelSerializer):

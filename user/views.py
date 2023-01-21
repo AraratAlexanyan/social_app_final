@@ -6,13 +6,10 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from user.models import Follow
-from user.serializer import UserSerializer, FollowSerializer
-
-
-# from user.models import Follow
-# from user.serializer import UserSerializer, FollowSerializer
+from user.serializer import UserSerializer, FollowSerializer, UserUpdateSerializer
 
 
 class UserLists(APIView):
@@ -36,6 +33,17 @@ class UserDetailView(APIView):
         serializer = UserSerializer(user)
         data = {'user_detail': serializer.data, 'followers_count': followers_count}
         return Response(data)
+
+
+class UserUpdateView(ModelViewSet):
+    """
+        Edit user
+    """
+    serializer_class = UserUpdateSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
 
 
 class UserCreate(APIView):
@@ -73,6 +81,7 @@ class UserVerify(APIView):
         dat = tokenizer.loads(token, max_age=settings.VERIFICATION_TIME_IN_SECONDS)
         user = User.objects.get(username=dat['username'], email=dat['email'])
         user.is_active = True
+        user.email = dat['email']
         user.save()
 
         return Response('Account successfully verified', status=status.HTTP_204_NO_CONTENT)
