@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from itsdangerous import URLSafeTimedSerializer
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework  import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -14,7 +14,7 @@ from user.serializer import UserSerializer, FollowSerializer, UserUpdateSerializ
 
 class UserLists(APIView):
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
 
     def get(self, req):
 
@@ -25,7 +25,7 @@ class UserLists(APIView):
 
 
 class UserDetailView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, req, pk):
         user = User.objects.get(id=pk)
@@ -40,7 +40,7 @@ class UserUpdateView(ModelViewSet):
         Edit user
     """
     serializer_class = UserUpdateSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         return User.objects.filter(id=self.request.user.id)

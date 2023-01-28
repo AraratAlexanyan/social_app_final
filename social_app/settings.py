@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     #
     'user.apps.UserConfig',
     'post.apps.PostConfig',
+    'feed.apps.FeedConfig',
 ]
 
 MIDDLEWARE = [

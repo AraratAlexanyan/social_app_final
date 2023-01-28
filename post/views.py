@@ -4,14 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from post.filters.post_filters import PostFilter
-from post.models import Category, Comment, Post
-from post.serializers import CategorySerializer, CommentSerializer, PostModelSerializer
-
-
-class CategoryListView(generics.ListCreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = (IsAuthenticated,)
+from post.models import Comment, Post
+from post.serializers import CommentSerializer, PostModelSerializer
 
 
 class CommentsListView(APIView):
@@ -85,10 +79,12 @@ class PostLikesAPIView(APIView):
 
         if not is_liked:
             post.likes.add(req.user)
+            post.likes_count = post.likes.all().count()
             post.save()
 
         if is_liked:
             post.likes.remove(req.user)
+            post.likes_count = post.likes.all().count()
             post.save()
 
         return Response(status=status.HTTP_200_OK)
@@ -101,16 +97,18 @@ class PostSavesAPIView(APIView):
         post = Post.objects.get(pk=pk)
         is_favorite = False
 
-        for saved in post.favorites.all():
+        for saved in post.saves.all():
             if saved == req.user:
                 is_favorite = True
 
         if not is_favorite:
-            post.favorites.add(req.user)
+            post.saves.add(req.user)
+            post.saved_count = post.saves.all().count()
             post.save()
 
         if is_favorite:
-            post.favorites.remove(req.user)
+            post.saves.remove(req.user)
+            post.saved_count = post.saves.all().count()
             post.save()
 
         return Response(status=status.HTTP_200_OK)
