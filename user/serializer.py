@@ -40,14 +40,6 @@ class UserPostDetailSerializer(serializers.ModelSerializer):
         fields = ['username']
 
 
-# class UserFollowsSerializer(serializers.ModelSerializer):
-#
-#     new_user = serializers.ReadOnlyField()
-#
-#     class Meta:
-#         model = NewUser
-#         fields = ('follows', 'new_user')
-
 class FollowSerializer(serializers.ModelSerializer):
     followed_date = serializers.ReadOnlyField()
     followers_count = serializers.ReadOnlyField()
